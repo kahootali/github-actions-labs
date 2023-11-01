@@ -8,6 +8,8 @@ on:
 jobs:
   Build-and-Deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     name: Build and Push Image to Image registry
     env:

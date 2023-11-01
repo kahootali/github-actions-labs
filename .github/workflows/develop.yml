@@ -31,7 +31,7 @@ jobs:
     - name: Generate Vars
       id: generate_vars
       run: |
-        IMAGE_TAG=${{ steps.generate_version.outputs.new_tag }}
+        IMAGE_TAG="${{ steps.generate_version.outputs.new_tag }}-RC"
         # Just Image name
         IMAGE_NAME=${{ github.repository }}
         #Image ID= Name + Tag
@@ -64,22 +64,6 @@ jobs:
         pull: true
         push: true
         tags: ${{ steps.generate_vars.outputs.image }}
-
-    - name: Push tag
-      uses: anothrNick/github-tag-action@1.67.0
-      id: tag_version
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
-        DEFAULT_BUMP: "patch"
-
-    - name: Create a GitHub release
-      id: 'github_release'
-      uses: ncipollo/release-action@v1.13.0
-      with:
-        tag: ${{ steps.tag_version.outputs.new_tag }}
-        name: ${{ steps.tag_version.outputs.new_tag }}
-        generateReleaseNotes: true
 
     # - name: Deploy to Staging
     #   uses: steebchen/kubectl@v2.0.0
