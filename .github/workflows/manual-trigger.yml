@@ -1,0 +1,34 @@
+name: Deploying to Prod Manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      apps:
+        type: choice
+        description: Apps to Deploy
+        options: 
+        - app1
+        - app2
+        - app3
+        - app4
+      tag:
+        description: 'Tag to release'
+        type: string
+        required: true
+jobs:
+  apps:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Send greeting
+      run: echo "Apps to be deployed are  ${{ github.event.inputs.apps }}"
+    - name: Deploying App
+      run: |
+        echo "This step will deploy app to prod"
+
+    - name: Push tag
+      uses: anothrNick/github-tag-action@1.67.0
+      id: tag_version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CUSTOM_TAG: ${{ github.event.inputs.tag }}"
