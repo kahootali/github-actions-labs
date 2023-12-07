@@ -1,0 +1,32 @@
+name: Push changes back to github
+
+on:
+  workflow_dispatch:
+    inputs:
+      fileName:
+        description: 'Filename to create'
+        type: string
+        required: true
+
+permissions:
+  checks: write
+  contents: write
+
+jobs:
+  push-changes:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Update Infrastructure repo
+      run:  |
+        touch ${{ github.event.inputs.fileName }}
+        export GH_USER="github-actions[bot]"
+        export GH_EMAIL="41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.email "${GH_EMAIL}"
+        git config --global user.name "${GH_USER}"
+        git add ${{ github.event.inputs.fileName }}
+        git status
+        git commit -m "Push new file ${{ github.event.inputs.fileName }}" || true
+        git push origin main || true
